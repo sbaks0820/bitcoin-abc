@@ -499,6 +499,9 @@ std::string HelpMessage(HelpMessageMode mode) {
                     "filters (default: %u)"),
                   DEFAULT_PEERBLOOMFILTERS));
     strUsage += HelpMessageOpt(
+        "-maxoutbound=<n>",
+        strprintf(_("Limit the number of automatic outbound connections made (default: %.2f)"), MAX_OUTBOUND_CONNECTIONS));
+    strUsage += HelpMessageOpt(
         "-port=<port>",
         strprintf(
             _("Listen for connections on <port> (default: %u or testnet: %u)"),
@@ -2153,8 +2156,7 @@ bool AppInitMain(Config &config, boost::thread_group &threadGroup,
     connOptions.nLocalServices = nLocalServices;
     connOptions.nRelevantServices = nRelevantServices;
     connOptions.nMaxConnections = nMaxConnections;
-    connOptions.nMaxOutbound =
-        std::min(MAX_OUTBOUND_CONNECTIONS, connOptions.nMaxConnections);
+    connOptions.nMaxOutbound = std::min((int)(GetArg("-maxoutbound", MAX_OUTBOUND_CONNECTIONS)), connOptions.nMaxConnections);
     connOptions.nMaxAddnode = MAX_ADDNODE_CONNECTIONS;
     connOptions.nMaxFeeler = 1;
     connOptions.nBestHeight = chainActive.Height();
